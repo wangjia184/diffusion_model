@@ -8,13 +8,12 @@ async function load_model() {
 
     try {
         const backend = await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.2.0/dist/tf-backend-webgl.min.js');
-        //tf.wasm.setWasmPaths('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.2.0/dist/')
+
         //const backend = await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@4.2.0/dist/tf-backend-wasm.min.js');
         //tf.wasm.setWasmPaths('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@4.2.0/dist/');
-        self.postMessage({ type: 'progress', progress: 0.2, message: 'Initialize tensorflow WASM backend' });
+        //await tf.setBackend('wasm');
 
         
-
         await tf.setBackend('webgl');
         self.postMessage({ type: 'progress', progress: 0.3, message: 'Loading model' });
     } catch (e) {
@@ -39,6 +38,7 @@ async function load_model() {
     } else {
         self.postMessage({ type: 'progress', progress: 0.6, message: 'Loading WASM application' });
     }
+    
     return model;
 }
 

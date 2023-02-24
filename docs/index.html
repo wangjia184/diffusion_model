@@ -1,55 +1,15 @@
-<html>
-    <head>
-        <style>
-            #container img {
-                width: 128px;
-                height: 128px;
-            }
-        </style>
-
-    </head>
-    <body>
-        <canvas id="canvas"></canvas>
-        <div id="container"></div>
-        <script>
-            const container = document.getElementById('container');
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext("2d");
-            ctx.scale(4, 4);
-            const webWorker = new Worker('model/worker.js');
-            webWorker.onmessage = (e) => {
-                if( e && e.data && e.data.image && e.data.image.length > 0 ) {
-
-                    const height = e.data.image[0].length;
-                    const width = e.data.image[0][0].length;
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const id = ctx.createImageData(width, height, { colorSpace : 'srgb'});
-                    const pixels = id.data;
-
-                    for( let y = 0; y < height; y ++){
-                        for( let x = 0; x < width; x++) {
-                            const offset = (y * width + x) * 4;
-                            const channels = e.data.image[0][y][x];
-
-                            pixels[offset] = Math.max( 0, Math.min( 255, channels[0] * 127.5 + 127.5));
-                            pixels[offset + 1] = Math.max( 0, Math.min( 255, channels[1] * 127.5 + 127.5));
-                            pixels[offset + 2] = Math.max( 0, Math.min( 255, channels[2] * 127.5 + 127.5));
-                            pixels[offset + 3] = 255;
-                        }
-                    }                  
-
-                    ctx.putImageData(id, 0, 0);
-                    const image = new Image();
-                    image.src = canvas.toDataURL();
-                    while (container.firstChild) {
-                        container.removeChild(container.lastChild);
-                    }
-                    container.appendChild(image);
-                }
-            }
-        </script>
-
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diffusion Model in Web Browser</title>
+    <script type="module" crossorigin src="/assets/index-75cbbba0.js"></script>
+    <link rel="stylesheet" href="/assets/index-9cf24286.css">
+  </head>
+  <body>
+    <div id="app"></div>
+    
+  </body>
 </html>
