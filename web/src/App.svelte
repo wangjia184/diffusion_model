@@ -6,7 +6,7 @@
   let idSource = 0;
   let percentage = 0;
 	const commandMap = {};
-  const worker = new Worker("/worker.js");
+  const worker = new Worker("./worker.js");
   worker.onmessage = async (evt) => {
 		const data = evt.data;
 		switch (data.type) {
