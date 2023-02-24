@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --base=/diffusion_model/",
     "preview": "vite preview"
   },
   "devDependencies": {
