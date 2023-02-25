@@ -240,7 +240,7 @@ Because $x_{t} = \sqrt{\bar{a}_t}x_0+ \sqrt{1-\bar{a}_t}ϵ$, $x_0 = \frac{x_t - 
 
  $$ \mu =\frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t + \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0 $$
 
-$$ \mu =\frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t + \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t} * \frac{x_t - \sqrt{1-\bar{a}_t}ϵ}{\sqrt{\bar{a}_t}}  $$
+$$ \mu =\frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t + \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t} \times \frac{x_t - \sqrt{1-\bar{a}_t}ϵ}{\sqrt{\bar{a}_t}}  $$
 
 
 $$ \mu =\frac{\sqrt{a_t}(1-\bar{a}_{t-1})x_t }{1-\bar{a}_t}
