@@ -4,7 +4,7 @@
 [Demo Site](https://wangjia184.github.io/diffusion_model/)
 
 
-## 1. Diffusion Model Introduction
+## 1. DDPM Introduction
 
 ![](https://huggingface.co/blog/assets/78_annotated-diffusion/diffusion_figure.png)
 
