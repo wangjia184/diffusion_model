@@ -15,7 +15,7 @@ import tensorflow_datasets as tfds
 
 batch_size = 32
 num_epochs = 100  # Just for the sake of demonstration
-total_timesteps = 1000
+total_timesteps = 300
 norm_groups = 8  # Number of groups used in GroupNormalization layer
 learning_rate = 2e-4
 
@@ -90,6 +90,25 @@ train_ds = (
 )
 
 
+
+
+# define various schedules for the TT timesteps 
+def cosine_beta_schedule(timesteps, s=0.008):
+    """
+    cosine schedule as proposed in https://arxiv.org/abs/2102.09672
+    """
+    steps = timesteps + 1
+    x = np.linspace(0, timesteps, steps)
+    alphas_cumprod = np.cos(((x / timesteps) + s) / (1 + s) * np.pi * 0.5) ** 2
+    alphas_cumprod = alphas_cumprod / alphas_cumprod[0]
+    betas = 1 - (alphas_cumprod[1:] / alphas_cumprod[:-1])
+    return np.clip(betas, 0.0001, 0.9999)
+
+def linear_beta_schedule(timesteps):
+    beta_start=1e-4,
+    beta_end=0.02,
+    return np.linspace(beta_start, beta_end, timesteps)
+
 """
 ## Gaussian diffusion utilities
 We define the forward process and the reverse process
@@ -110,7 +129,7 @@ class GaussianDiffusion:
         self,
         beta_start=1e-4,
         beta_end=0.02,
-        timesteps=1000,
+        timesteps=300,
         clip_min=-1.0,
         clip_max=1.0,
     ):
@@ -121,12 +140,8 @@ class GaussianDiffusion:
         self.clip_max = clip_max
 
         # Define the linear variance schedule
-        self.betas = betas = np.linspace(
-            beta_start,
-            beta_end,
-            timesteps,
-            dtype=np.float64,  # Using float64 for better precision
-        )
+        self.betas = betas = cosine_beta_schedule(timesteps)
+        
         self.num_timesteps = int(timesteps)
 
         alphas = 1.0 - betas
@@ -136,6 +151,8 @@ class GaussianDiffusion:
         self.betas = tf.constant(betas, dtype=tf.float32)
         self.alphas_cumprod = tf.constant(alphas_cumprod, dtype=tf.float32)
         self.alphas_cumprod_prev = tf.constant(alphas_cumprod_prev, dtype=tf.float32)
+
+        tf.print(self.alphas_cumprod_prev)
 
         # Calculations for diffusion q(x_t | x_{t-1}) and others
         self.sqrt_alphas_cumprod = tf.constant(
@@ -180,8 +197,7 @@ class GaussianDiffusion:
             (1.0 - alphas_cumprod_prev) * np.sqrt(alphas) / (1.0 - alphas_cumprod),
             dtype=tf.float32,
         )
-        tf.print(self.sqrt_one_minus_alphas_cumprod)
-        
+
 
     def _extract(self, a, t, x_shape):
         """Extract some coefficients at specified timesteps,
@@ -670,7 +686,87 @@ model.compile(
 
 #print("tensorflow version:", tf.__version__)
 #print("keras version:", tf.keras.__version__)
-tf.saved_model.save(model.ema_network, "saved_model/")
+#tf.saved_model.save(model.ema_network, "saved_model/")
 
 # Generate and plot some samples
-#model.plot_images(num_rows=1, num_cols=2)
+#model.plot_images(num_rows=2, num_cols=4)
+
+"""
+import torch
+import torch.nn as nn
+from dpm_solver import NoiseScheduleVP, model_wrapper, DPM_Solver
+## 1. Define the noise schedule.
+noise_schedule = NoiseScheduleVP(schedule='discrete', betas=torch.from_numpy(gdf_util.betas.numpy()))
+
+tf.compat.v1.enable_eager_execution()
+class XXModel(nn.Module):
+    def __init__(self, ema_network):
+        super().__init__()
+        self.ema_network = ema_network
+
+    def forward(self, x, t):
+        print(t)
+        samples = tf.constant(np.transpose(x.numpy(), [0, 2, 3, 1] ))
+        tt = tf.constant(t.numpy())
+        pred_noise = self.ema_network.predict(
+            [samples, tt], verbose=0, batch_size=1
+        )
+        return torch.from_numpy(np.transpose(pred_noise, [0, 3, 1, 2]))
+    
+xx_model = XXModel(model.ema_network)
+## 2. Convert your discrete-time `model` to the continuous-time
+## noise prediction model. Here is an example for a diffusion model
+## `model` with the noise prediction type ("noise") .
+model_fn = model_wrapper(
+    xx_model,
+    noise_schedule,
+    model_type="noise",  # or "x_start" or "v" or "score"
+    model_kwargs={},
+)
+
+
+## 3. Define dpm-solver and sample by singlestep DPM-Solver.
+## (We recommend singlestep DPM-Solver for unconditional sampling)
+## You can adjust the `steps` to balance the computation
+## costs and the sample quality.
+dpm_solver = DPM_Solver(model_fn, noise_schedule, algorithm_type="dpmsolver++")
+## Can also try
+# dpm_solver = DPM_Solver(model_fn, noise_schedule, algorithm_type="dpmsolver++")
+
+x_T = torch.randn(8, img_channels, img_size, img_size, dtype=torch.float32)
+
+## You can use steps = 10, 12, 15, 20, 25, 50, 100.
+## Empirically, we find that steps in [10, 20] can generate quite good samples.
+## And steps = 20 can almost converge.
+x_sample = dpm_solver.sample(
+    x_T,
+    steps=20,
+    order=3,
+    skip_type="time_quadratic",
+    method="singlestep",
+    denoise_to_zero=True
+)
+
+x_sample = np.transpose(x_sample.numpy(), [0, 2, 3, 1] )
+
+generated_samples = (
+    tf.clip_by_value(x_sample * 127.5 + 127.5, 0.0, 255.0)
+    .numpy()
+    .astype(np.uint8)
+)
+
+num_rows = 2
+num_cols = 4
+figsize=(12, 5)
+_, ax = plt.subplots(num_rows, num_cols, figsize=figsize)
+for i, image in enumerate(generated_samples):
+    if num_rows == 1:
+        ax[i].imshow(image)
+        ax[i].axis("off")
+    else:
+        ax[i // num_cols, i % num_cols].imshow(image)
+        ax[i // num_cols, i % num_cols].axis("off")
+
+plt.tight_layout()
+plt.show()
+"""

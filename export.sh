@@ -4,4 +4,7 @@ tensorflowjs_converter \
     --saved_model_tags=serve \
     --quantize_float16=* \
     ./saved_model \
-    ./www/model
+    ./web/public/64x64_cosin_300
+
+
+#--weight_shard_size_bytes=1048576 \
