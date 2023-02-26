@@ -3,7 +3,7 @@
 const url = self.location.toString();
 let index = url.lastIndexOf('/');
 index = url.lastIndexOf('/', index-1);
-console.log(url, index);
+
 const TF_JS_URL = url.substring( 0, index) + "/@tensorflow/tfjs/dist/tf.min.js";
 const TF_JS_CDN_URL = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.2.0/dist/tf.min.js";
 async function load_model() {
@@ -34,6 +34,18 @@ async function load_model() {
 }
 
 async function main() {
+
+    try {
+        await tf.setBackend('webgl');
+        console.log('Successfully loaded WebGL backend');
+    } catch {
+        await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@4.2.0/dist/tf-backend-wasm.min.js');
+        await tf.setBackend('wasm');
+        console.log('Successfully loaded WASM backend');
+    }
+    
+
+
     const model = await load_model();
 
     const stable_sqrt = (number) => number > 0 && number < 0.001 ? Math.exp( 0.5 * Math.log(Math.max(number, 1e-20)) ) : Math.sqrt(number);
