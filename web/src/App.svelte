@@ -1,5 +1,6 @@
 <script>
   import { Progress } from 'sveltestrap';
+  import { onMount } from 'svelte';
 
   let loadingPercentage = 0;
   let canvas;
@@ -8,37 +9,42 @@
   let images = [];
 	const commandMap = {};
   const worker = new Worker("./64x64_cosin_300/worker.js");
-  worker.onmessage = async (evt) => {
-		const data = evt.data;
-		switch (data.type) {
-			case "reply": {
-				const handler = commandMap[data.id];
-				if (handler) {
-					handler.resolve(data.data);
-				} else {
-					console.log("Unable to find the promise.", data);
-				}
-				break;
-			}
-			case "ready": {
-				loadingPercentage = 100;
-        ddpmGenerate();
-				break;
-			}
-			case "progress": {
-				loadingPercentage = Math.floor(data.progress * 100);
-				break;
-			}
-      case "error": {
-				alert(data.message);
-				break;
-			}
-			default: {
-				console.log(data);
-				break;
-			}
-		}
-	};
+
+  onMount( () => {
+    worker.onmessage = async (evt) => {
+      const data = evt.data;
+      switch (data.type) {
+        case "reply": {
+          const handler = commandMap[data.id];
+          if (handler) {
+            handler.resolve(data.data);
+          } else {
+            console.log("Unable to find the promise.", data);
+          }
+          break;
+        }
+        case "ready": {
+          loadingPercentage = 100;
+          setTimeout( () => ddpmGenerate());
+          break;
+        }
+        case "progress": {
+          loadingPercentage = Math.floor(data.progress * 100);
+          break;
+        }
+        case "error": {
+          alert(data.message);
+          self.location = self.location;
+          break;
+        }
+        default: {
+          console.log(data);
+          break;
+        }
+      }
+    };
+  });
+  
 
   const registerPromise = () => {
 		const id = idSource++;
