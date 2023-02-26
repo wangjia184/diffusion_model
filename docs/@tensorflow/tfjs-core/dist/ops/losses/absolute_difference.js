@@ -1,0 +1,51 @@
+/**
+ * @license
+ * Copyright 2020 Google LLC. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =============================================================================
+ */
+import { convertToTensor } from '../../tensor_util_env';
+import { assertShapesMatch } from '../../util';
+import { abs } from '../abs';
+import { Reduction } from '../loss_ops_utils';
+import { op } from '../operation';
+import { sub } from '../sub';
+import { computeWeightedLoss } from './compute_weighted_loss';
+/**
+ * Computes the absolute difference loss between two tensors.
+ *
+ * @param labels The ground truth output tensor, same dimensions as
+ *    'predictions'.
+ * @param predictions The predicted outputs.
+ * @param weights Tensor whose rank is either 0, or the same rank as
+ *    `labels`, and must be broadcastable to `labels` (i.e., all dimensions
+ *    must be either `1`, or the same as the corresponding `losses`
+ *    dimension).
+ * @param reduction Type of reduction to apply to loss. Should be of type
+ *    `Reduction`
+ *
+ * @doc {heading: 'Training', subheading: 'Losses', namespace: 'losses'}
+ */
+function absoluteDifference_(labels, predictions, weights, reduction = Reduction.SUM_BY_NONZERO_WEIGHTS) {
+    const $labels = convertToTensor(labels, 'labels', 'absoluteDifference');
+    const $predictions = convertToTensor(predictions, 'predictions', 'absoluteDifference');
+    let $weights = null;
+    if (weights != null) {
+        $weights = convertToTensor(weights, 'weights', 'absoluteDifference');
+    }
+    assertShapesMatch($labels.shape, $predictions.shape, 'Error in absoluteDifference: ');
+    const losses = abs(sub($labels, $predictions));
+    return computeWeightedLoss(losses, $weights, reduction);
+}
+export const absoluteDifference = /* @__PURE__ */ op({ absoluteDifference_ });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYWJzb2x1dGVfZGlmZmVyZW5jZS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uLy4uLy4uL3RmanMtY29yZS9zcmMvb3BzL2xvc3Nlcy9hYnNvbHV0ZV9kaWZmZXJlbmNlLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7Ozs7R0FlRztBQUdILE9BQU8sRUFBQyxlQUFlLEVBQUMsTUFBTSx1QkFBdUIsQ0FBQztBQUV0RCxPQUFPLEVBQUMsaUJBQWlCLEVBQUMsTUFBTSxZQUFZLENBQUM7QUFDN0MsT0FBTyxFQUFDLEdBQUcsRUFBQyxNQUFNLFFBQVEsQ0FBQztBQUMzQixPQUFPLEVBQUMsU0FBUyxFQUFDLE1BQU0sbUJBQW1CLENBQUM7QUFDNUMsT0FBTyxFQUFDLEVBQUUsRUFBQyxNQUFNLGNBQWMsQ0FBQztBQUNoQyxPQUFPLEVBQUMsR0FBRyxFQUFDLE1BQU0sUUFBUSxDQUFDO0FBRTNCLE9BQU8sRUFBQyxtQkFBbUIsRUFBQyxNQUFNLHlCQUF5QixDQUFDO0FBRTVEOzs7Ozs7Ozs7Ozs7OztHQWNHO0FBQ0gsU0FBUyxtQkFBbUIsQ0FDeEIsTUFBb0IsRUFBRSxXQUF5QixFQUMvQyxPQUEyQixFQUMzQixTQUFTLEdBQUcsU0FBUyxDQUFDLHNCQUFzQjtJQUM5QyxNQUFNLE9BQU8sR0FBRyxlQUFlLENBQUMsTUFBTSxFQUFFLFFBQVEsRUFBRSxvQkFBb0IsQ0FBQyxDQUFDO0lBQ3hFLE1BQU0sWUFBWSxHQUNkLGVBQWUsQ0FBQyxXQUFXLEVBQUUsYUFBYSxFQUFFLG9CQUFvQixDQUFDLENBQUM7SUFDdEUsSUFBSSxRQUFRLEdBQVcsSUFBSSxDQUFDO0lBQzVCLElBQUksT0FBTyxJQUFJLElBQUksRUFBRTtRQUNuQixRQUFRLEdBQUcsZUFBZSxDQUFDLE9BQU8sRUFBRSxTQUFTLEVBQUUsb0JBQW9CLENBQUMsQ0FBQztLQUN0RTtJQUNELGlCQUFpQixDQUNiLE9BQU8sQ0FBQyxLQUFLLEVBQUUsWUFBWSxDQUFDLEtBQUssRUFBRSwrQkFBK0IsQ0FBQyxDQUFDO0lBRXhFLE1BQU0sTUFBTSxHQUFHLEdBQUcsQ0FBQyxHQUFHLENBQUMsT0FBTyxFQUFFLFlBQVksQ0FBQyxDQUFDLENBQUM7SUFDL0MsT0FBTyxtQkFBbUIsQ0FBQyxNQUFNLEVBQUUsUUFBUSxFQUFFLFNBQVMsQ0FBQyxDQUFDO0FBQzFELENBQUM7QUFFRCxNQUFNLENBQUMsTUFBTSxrQkFBa0IsR0FBRyxlQUFlLENBQUMsRUFBRSxDQUFDLEVBQUMsbUJBQW1CLEVBQUMsQ0FBQyxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBAbGljZW5zZVxuICogQ29weXJpZ2h0IDIwMjAgR29vZ2xlIExMQy4gQWxsIFJpZ2h0cyBSZXNlcnZlZC5cbiAqIExpY2Vuc2VkIHVuZGVyIHRoZSBBcGFjaGUgTGljZW5zZSwgVmVyc2lvbiAyLjAgKHRoZSBcIkxpY2Vuc2VcIik7XG4gKiB5b3UgbWF5IG5vdCB1c2UgdGhpcyBmaWxlIGV4Y2VwdCBpbiBjb21wbGlhbmNlIHdpdGggdGhlIExpY2Vuc2UuXG4gKiBZb3UgbWF5IG9idGFpbiBhIGNvcHkgb2YgdGhlIExpY2Vuc2UgYXRcbiAqXG4gKiBodHRwOi8vd3d3LmFwYWNoZS5vcmcvbGljZW5zZXMvTElDRU5TRS0yLjBcbiAqXG4gKiBVbmxlc3MgcmVxdWlyZWQgYnkgYXBwbGljYWJsZSBsYXcgb3IgYWdyZWVkIHRvIGluIHdyaXRpbmcsIHNvZnR3YXJlXG4gKiBkaXN0cmlidXRlZCB1bmRlciB0aGUgTGljZW5zZSBpcyBkaXN0cmlidXRlZCBvbiBhbiBcIkFTIElTXCIgQkFTSVMsXG4gKiBXSVRIT1VUIFdBUlJBTlRJRVMgT1IgQ09ORElUSU9OUyBPRiBBTlkgS0lORCwgZWl0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZC5cbiAqIFNlZSB0aGUgTGljZW5zZSBmb3IgdGhlIHNwZWNpZmljIGxhbmd1YWdlIGdvdmVybmluZyBwZXJtaXNzaW9ucyBhbmRcbiAqIGxpbWl0YXRpb25zIHVuZGVyIHRoZSBMaWNlbnNlLlxuICogPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbiAqL1xuXG5pbXBvcnQge1RlbnNvcn0gZnJvbSAnLi4vLi4vdGVuc29yJztcbmltcG9ydCB7Y29udmVydFRvVGVuc29yfSBmcm9tICcuLi8uLi90ZW5zb3JfdXRpbF9lbnYnO1xuaW1wb3J0IHtUZW5zb3JMaWtlfSBmcm9tICcuLi8uLi90eXBlcyc7XG5pbXBvcnQge2Fzc2VydFNoYXBlc01hdGNofSBmcm9tICcuLi8uLi91dGlsJztcbmltcG9ydCB7YWJzfSBmcm9tICcuLi9hYnMnO1xuaW1wb3J0IHtSZWR1Y3Rpb259IGZyb20gJy4uL2xvc3Nfb3BzX3V0aWxzJztcbmltcG9ydCB7b3B9IGZyb20gJy4uL29wZXJhdGlvbic7XG5pbXBvcnQge3N1Yn0gZnJvbSAnLi4vc3ViJztcblxuaW1wb3J0IHtjb21wdXRlV2VpZ2h0ZWRMb3NzfSBmcm9tICcuL2NvbXB1dGVfd2VpZ2h0ZWRfbG9zcyc7XG5cbi8qKlxuICogQ29tcHV0ZXMgdGhlIGFic29sdXRlIGRpZmZlcmVuY2UgbG9zcyBiZXR3ZWVuIHR3byB0ZW5zb3JzLlxuICpcbiAqIEBwYXJhbSBsYWJlbHMgVGhlIGdyb3VuZCB0cnV0aCBvdXRwdXQgdGVuc29yLCBzYW1lIGRpbWVuc2lvbnMgYXNcbiAqICAgICdwcmVkaWN0aW9ucycuXG4gKiBAcGFyYW0gcHJlZGljdGlvbnMgVGhlIHByZWRpY3RlZCBvdXRwdXRzLlxuICogQHBhcmFtIHdlaWdodHMgVGVuc29yIHdob3NlIHJhbmsgaXMgZWl0aGVyIDAsIG9yIHRoZSBzYW1lIHJhbmsgYXNcbiAqICAgIGBsYWJlbHNgLCBhbmQgbXVzdCBiZSBicm9hZGNhc3RhYmxlIHRvIGBsYWJlbHNgIChpLmUuLCBhbGwgZGltZW5zaW9uc1xuICogICAgbXVzdCBiZSBlaXRoZXIgYDFgLCBvciB0aGUgc2FtZSBhcyB0aGUgY29ycmVzcG9uZGluZyBgbG9zc2VzYFxuICogICAgZGltZW5zaW9uKS5cbiAqIEBwYXJhbSByZWR1Y3Rpb24gVHlwZSBvZiByZWR1Y3Rpb24gdG8gYXBwbHkgdG8gbG9zcy4gU2hvdWxkIGJlIG9mIHR5cGVcbiAqICAgIGBSZWR1Y3Rpb25gXG4gKlxuICogQGRvYyB7aGVhZGluZzogJ1RyYWluaW5nJywgc3ViaGVhZGluZzogJ0xvc3NlcycsIG5hbWVzcGFjZTogJ2xvc3Nlcyd9XG4gKi9cbmZ1bmN0aW9uIGFic29sdXRlRGlmZmVyZW5jZV88VCBleHRlbmRzIFRlbnNvciwgTyBleHRlbmRzIFRlbnNvcj4oXG4gICAgbGFiZWxzOiBUfFRlbnNvckxpa2UsIHByZWRpY3Rpb25zOiBUfFRlbnNvckxpa2UsXG4gICAgd2VpZ2h0cz86IFRlbnNvcnxUZW5zb3JMaWtlLFxuICAgIHJlZHVjdGlvbiA9IFJlZHVjdGlvbi5TVU1fQllfTk9OWkVST19XRUlHSFRTKTogTyB7XG4gIGNvbnN0ICRsYWJlbHMgPSBjb252ZXJ0VG9UZW5zb3IobGFiZWxzLCAnbGFiZWxzJywgJ2Fic29sdXRlRGlmZmVyZW5jZScpO1xuICBjb25zdCAkcHJlZGljdGlvbnMgPVxuICAgICAgY29udmVydFRvVGVuc29yKHByZWRpY3Rpb25zLCAncHJlZGljdGlvbnMnLCAnYWJzb2x1dGVEaWZmZXJlbmNlJyk7XG4gIGxldCAkd2VpZ2h0czogVGVuc29yID0gbnVsbDtcbiAgaWYgKHdlaWdodHMgIT0gbnVsbCkge1xuICAgICR3ZWlnaHRzID0gY29udmVydFRvVGVuc29yKHdlaWdodHMsICd3ZWlnaHRzJywgJ2Fic29sdXRlRGlmZmVyZW5jZScpO1xuICB9XG4gIGFzc2VydFNoYXBlc01hdGNoKFxuICAgICAgJGxhYmVscy5zaGFwZSwgJHByZWRpY3Rpb25zLnNoYXBlLCAnRXJyb3IgaW4gYWJzb2x1dGVEaWZmZXJlbmNlOiAnKTtcblxuICBjb25zdCBsb3NzZXMgPSBhYnMoc3ViKCRsYWJlbHMsICRwcmVkaWN0aW9ucykpO1xuICByZXR1cm4gY29tcHV0ZVdlaWdodGVkTG9zcyhsb3NzZXMsICR3ZWlnaHRzLCByZWR1Y3Rpb24pO1xufVxuXG5leHBvcnQgY29uc3QgYWJzb2x1dGVEaWZmZXJlbmNlID0gLyogQF9fUFVSRV9fICovIG9wKHthYnNvbHV0ZURpZmZlcmVuY2VffSk7XG4iXX0=

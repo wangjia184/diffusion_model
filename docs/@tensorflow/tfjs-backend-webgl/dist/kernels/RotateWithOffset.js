@@ -1,0 +1,34 @@
+/**
+ * @license
+ * Copyright 2020 Google LLC. All Rights Reserved.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * =============================================================================
+ */
+import { backend_util } from '@tensorflow/tfjs-core';
+import { RotateWithOffset } from '@tensorflow/tfjs-core';
+import { RotateProgram } from '../rotate_gpu';
+export const rotateWithOffsetConfig = {
+    kernelName: RotateWithOffset,
+    backendName: 'webgl',
+    kernelFunc: ({ inputs, attrs, backend }) => {
+        const { image } = inputs;
+        const { radians, fillValue, center } = attrs;
+        const webglBackend = backend;
+        const program = new RotateProgram(image.shape, fillValue);
+        const [centerX, centerY] = backend_util.getImageCenter(center, image.shape[1], image.shape[2]);
+        const customValues = [[centerX, centerY, Math.sin(radians), Math.cos(radians)]];
+        const output = webglBackend.runWebGLProgram(program, [image], image.dtype, customValues);
+        return output;
+    }
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiUm90YXRlV2l0aE9mZnNldC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uLy4uL3RmanMtYmFja2VuZC13ZWJnbC9zcmMva2VybmVscy9Sb3RhdGVXaXRoT2Zmc2V0LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7Ozs7Ozs7Ozs7Ozs7R0FlRztBQUVILE9BQU8sRUFBQyxZQUFZLEVBQXlCLE1BQU0sdUJBQXVCLENBQUM7QUFDM0UsT0FBTyxFQUFDLGdCQUFnQixFQUFnRCxNQUFNLHVCQUF1QixDQUFDO0FBR3RHLE9BQU8sRUFBQyxhQUFhLEVBQUMsTUFBTSxlQUFlLENBQUM7QUFFNUMsTUFBTSxDQUFDLE1BQU0sc0JBQXNCLEdBQWlCO0lBQ2xELFVBQVUsRUFBRSxnQkFBZ0I7SUFDNUIsV0FBVyxFQUFFLE9BQU87SUFDcEIsVUFBVSxFQUFFLENBQUMsRUFBQyxNQUFNLEVBQUUsS0FBSyxFQUFFLE9BQU8sRUFBQyxFQUFFLEVBQUU7UUFDdkMsTUFBTSxFQUFDLEtBQUssRUFBQyxHQUFHLE1BQWdDLENBQUM7UUFDakQsTUFBTSxFQUFDLE9BQU8sRUFBRSxTQUFTLEVBQUUsTUFBTSxFQUFDLEdBQzlCLEtBQXlDLENBQUM7UUFDOUMsTUFBTSxZQUFZLEdBQUcsT0FBMkIsQ0FBQztRQUVqRCxNQUFNLE9BQU8sR0FBRyxJQUFJLGFBQWEsQ0FBRSxLQUFrQixDQUFDLEtBQUssRUFBRSxTQUFTLENBQUMsQ0FBQztRQUN4RSxNQUFNLENBQUMsT0FBTyxFQUFFLE9BQU8sQ0FBQyxHQUNwQixZQUFZLENBQUMsY0FBYyxDQUFDLE1BQU0sRUFBRSxLQUFLLENBQUMsS0FBSyxDQUFDLENBQUMsQ0FBQyxFQUFFLEtBQUssQ0FBQyxLQUFLLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztRQUN4RSxNQUFNLFlBQVksR0FDZCxDQUFDLENBQUMsT0FBTyxFQUFFLE9BQU8sRUFBRSxJQUFJLENBQUMsR0FBRyxDQUFDLE9BQU8sQ0FBQyxFQUFFLElBQUksQ0FBQyxHQUFHLENBQUMsT0FBTyxDQUFDLENBQUMsQ0FBQyxDQUFDO1FBQy9ELE1BQU0sTUFBTSxHQUFHLFlBQVksQ0FBQyxlQUFlLENBQ3ZDLE9BQU8sRUFBRSxDQUFDLEtBQUssQ0FBQyxFQUFFLEtBQUssQ0FBQyxLQUFLLEVBQUUsWUFBWSxDQUFDLENBQUM7UUFDakQsT0FBTyxNQUFNLENBQUM7SUFDaEIsQ0FBQztDQUNGLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIEBsaWNlbnNlXG4gKiBDb3B5cmlnaHQgMjAyMCBHb29nbGUgTExDLiBBbGwgUmlnaHRzIFJlc2VydmVkLlxuICogTGljZW5zZWQgdW5kZXIgdGhlIEFwYWNoZSBMaWNlbnNlLCBWZXJzaW9uIDIuMCAodGhlIFwiTGljZW5zZVwiKTtcbiAqIHlvdSBtYXkgbm90IHVzZSB0aGlzIGZpbGUgZXhjZXB0IGluIGNvbXBsaWFuY2Ugd2l0aCB0aGUgTGljZW5zZS5cbiAqIFlvdSBtYXkgb2J0YWluIGEgY29weSBvZiB0aGUgTGljZW5zZSBhdFxuICpcbiAqIGh0dHA6Ly93d3cuYXBhY2hlLm9yZy9saWNlbnNlcy9MSUNFTlNFLTIuMFxuICpcbiAqIFVubGVzcyByZXF1aXJlZCBieSBhcHBsaWNhYmxlIGxhdyBvciBhZ3JlZWQgdG8gaW4gd3JpdGluZywgc29mdHdhcmVcbiAqIGRpc3RyaWJ1dGVkIHVuZGVyIHRoZSBMaWNlbnNlIGlzIGRpc3RyaWJ1dGVkIG9uIGFuIFwiQVMgSVNcIiBCQVNJUyxcbiAqIFdJVEhPVVQgV0FSUkFOVElFUyBPUiBDT05ESVRJT05TIE9GIEFOWSBLSU5ELCBlaXRoZXIgZXhwcmVzcyBvciBpbXBsaWVkLlxuICogU2VlIHRoZSBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UgZ292ZXJuaW5nIHBlcm1pc3Npb25zIGFuZFxuICogbGltaXRhdGlvbnMgdW5kZXIgdGhlIExpY2Vuc2UuXG4gKiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PVxuICovXG5cbmltcG9ydCB7YmFja2VuZF91dGlsLCBLZXJuZWxDb25maWcsIFRlbnNvcjREfSBmcm9tICdAdGVuc29yZmxvdy90ZmpzLWNvcmUnO1xuaW1wb3J0IHtSb3RhdGVXaXRoT2Zmc2V0LCBSb3RhdGVXaXRoT2Zmc2V0QXR0cnMsIFJvdGF0ZVdpdGhPZmZzZXRJbnB1dHN9IGZyb20gJ0B0ZW5zb3JmbG93L3RmanMtY29yZSc7XG5cbmltcG9ydCB7TWF0aEJhY2tlbmRXZWJHTH0gZnJvbSAnLi4vYmFja2VuZF93ZWJnbCc7XG5pbXBvcnQge1JvdGF0ZVByb2dyYW19IGZyb20gJy4uL3JvdGF0ZV9ncHUnO1xuXG5leHBvcnQgY29uc3Qgcm90YXRlV2l0aE9mZnNldENvbmZpZzogS2VybmVsQ29uZmlnID0ge1xuICBrZXJuZWxOYW1lOiBSb3RhdGVXaXRoT2Zmc2V0LFxuICBiYWNrZW5kTmFtZTogJ3dlYmdsJyxcbiAga2VybmVsRnVuYzogKHtpbnB1dHMsIGF0dHJzLCBiYWNrZW5kfSkgPT4ge1xuICAgIGNvbnN0IHtpbWFnZX0gPSBpbnB1dHMgYXMgUm90YXRlV2l0aE9mZnNldElucHV0cztcbiAgICBjb25zdCB7cmFkaWFucywgZmlsbFZhbHVlLCBjZW50ZXJ9ID1cbiAgICAgICAgYXR0cnMgYXMgdW5rbm93biBhcyBSb3RhdGVXaXRoT2Zmc2V0QXR0cnM7XG4gICAgY29uc3Qgd2ViZ2xCYWNrZW5kID0gYmFja2VuZCBhcyBNYXRoQmFja2VuZFdlYkdMO1xuXG4gICAgY29uc3QgcHJvZ3JhbSA9IG5ldyBSb3RhdGVQcm9ncmFtKChpbWFnZSBhcyBUZW5zb3I0RCkuc2hhcGUsIGZpbGxWYWx1ZSk7XG4gICAgY29uc3QgW2NlbnRlclgsIGNlbnRlclldID1cbiAgICAgICAgYmFja2VuZF91dGlsLmdldEltYWdlQ2VudGVyKGNlbnRlciwgaW1hZ2Uuc2hhcGVbMV0sIGltYWdlLnNoYXBlWzJdKTtcbiAgICBjb25zdCBjdXN0b21WYWx1ZXMgPVxuICAgICAgICBbW2NlbnRlclgsIGNlbnRlclksIE1hdGguc2luKHJhZGlhbnMpLCBNYXRoLmNvcyhyYWRpYW5zKV1dO1xuICAgIGNvbnN0IG91dHB1dCA9IHdlYmdsQmFja2VuZC5ydW5XZWJHTFByb2dyYW0oXG4gICAgICAgIHByb2dyYW0sIFtpbWFnZV0sIGltYWdlLmR0eXBlLCBjdXN0b21WYWx1ZXMpO1xuICAgIHJldHVybiBvdXRwdXQ7XG4gIH1cbn07XG4iXX0=

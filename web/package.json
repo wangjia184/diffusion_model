@@ -14,6 +14,7 @@
     "vite": "^4.1.0"
   },
   "dependencies": {
+    "@tensorflow/tfjs": "^4.2.0",
     "sveltestrap": "^5.10.0"
   }
 }
