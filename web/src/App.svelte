@@ -5,6 +5,7 @@
   let canvas;
   let idSource = 0;
   let percentage = 0;
+  let images = [];
 	const commandMap = {};
   const worker = new Worker("./64x64_cosin_300/worker.js");
   worker.onmessage = async (evt) => {
@@ -76,6 +77,12 @@
 	};
 
   const ddpmGenerate = async() => {
+    percentage = 0;
+    if(canvas && canvas.width && canvas.height) {
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    
     let response = await ddpmStart();
     updateCanvas(response.image);
     percentage = response.percent;
@@ -85,6 +92,11 @@
       updateCanvas(response.image);
       percentage = response.percent;
     }
+
+    images.push(canvas.toDataURL());
+    images = images;
+
+    await ddpmGenerate();
   };
 
   const scale = 2;
@@ -125,14 +137,7 @@
     }                  
 
     ctx.putImageData(id, 0, 0);
-    /*
-    const image = new Image();
-    image.src = canvas.toDataURL();
-    while (container.firstChild) {
-        container.removeChild(container.lastChild);
-    }
-    container.appendChild(image);
-    */
+
   }
 
 
@@ -142,24 +147,38 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 </svelte:head>
 
+
+
 {#if loadingPercentage < 100 }
 <div>
   <div class="text-center">Loading ...</div>
   <Progress animated color="success" value={loadingPercentage}>{loadingPercentage}%</Progress>
 </div>
 {:else}
-<div class="d-flex justify-content-center">
-  <div >
-    <canvas class="d-flex" bind:this={canvas}></canvas>
-    <div class="d-flex progress_bar" style="width:{percentage*100}%"></div>
+
+
+<div class="container">
+  <div class="row">
+    {#each images as img }
+    <div class="col">
+      <img src={img} class="generated mb-2" alt=""/>
+    </div>
+    
+    {/each}
+    <div class="col">
+      <div class="d-flex justify-content-center">
+        <div >
+          <canvas class="d-flex" bind:this={canvas}></canvas>
+          <div class="d-flex progress_bar" style="width:{percentage*100}%"></div>
+        </div>
+      </div>
+    </div>
   </div>
+
 </div>
 {/if}
 
 
-<main>
-  
-</main>
 
 
 <style>
@@ -168,8 +187,15 @@
     background-color: darkorange;
   }
 
-  :global(canvas) {
+  .generated {
+    width:128px;
+    height:128px;
+    border: solid 1px #666;
+  }
 
-    background-color: #999;
+  :global(canvas) {
+    width:128px;
+    height:128px;
+    border: solid 1px #666;
   }
 </style>

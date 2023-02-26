@@ -48,7 +48,7 @@ async function main() {
 
     const model = await load_model();
 
-    const stable_sqrt = (number) => number > 0 && number < 0.001 ? Math.exp( 0.5 * Math.log(Math.max(number, 1e-20)) ) : Math.sqrt(number);
+    const stable_sqrt = (number) => number > 0 && number < 0.001 ? Math.exp( 0.5 * Math.log(number) ) : Math.sqrt(number);
 
     // cosine schedule as proposed in https://arxiv.org/abs/2102.09672
     const cosine_beta_schedule = (timesteps, s) => {
@@ -74,9 +74,6 @@ async function main() {
     const alphas = new Array(timesteps);
     const alphas_cumprod = new Array(timesteps);
     const alphas_cumprod_prev = new Array(timesteps);
-    const sqrt_one_minus_alphas_cumprod = new Array(timesteps);
-    const sqrt_recip_alphas_cumprod = new Array(timesteps);
-    const sqrt_recipm1_alphas_cumprod = new Array(timesteps);
     const stddevs = new Array(timesteps);
 
     alphas_cumprod_prev[0] = 1.0;
@@ -91,13 +88,7 @@ async function main() {
             alphas_cumprod_prev[index+1] = alphas_cumprod[index];
         }
 
-        sqrt_recip_alphas_cumprod[index] = stable_sqrt(1.0 / alphas_cumprod[index]);
-        sqrt_recipm1_alphas_cumprod[index] = stable_sqrt(1.0 / alphas_cumprod[index] - 1);
-
-        sqrt_one_minus_alphas_cumprod[index] = stable_sqrt(1.0 - alphas_cumprod[index]);
-
-        const variance = beta * (1.0 - alphas_cumprod_prev[index]) / (1.0 - alphas_cumprod[index]);
-        stddevs[index] = Math.exp( 0.5 * Math.log(Math.max(variance, 1e-20)) ); // Log calculation clipped because the posterior variance is 0 at the beginning 
+        stddevs[index] = stable_sqrt( beta * (1.0 - alphas_cumprod_prev[index]) / (1.0 - alphas_cumprod[index]) )
     });
 
     if( typeof(console.log) === 'function' ){
@@ -105,7 +96,6 @@ async function main() {
         console.log("alphas=", alphas);
         console.log("alphas_cumprod=", alphas_cumprod);
         console.log("alphas_cumprod_prev=", alphas_cumprod_prev);
-        console.log("sqrt_one_minus_alphas_cumprod=", sqrt_one_minus_alphas_cumprod);
         console.log("stddevs=", stddevs);
     }
     

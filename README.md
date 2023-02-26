@@ -238,35 +238,11 @@ $$ p(x_{t-1}|x_{t}) \sim N\left(
 
 Because $x_{t} = \sqrt{\bar{a}_t}x_0+ \sqrt{1-\bar{a}_t}ϵ$, $x_0 = \frac{x_t - \sqrt{1-\bar{a}_t}ϵ}{\sqrt{\bar{a}_t}}$. Substitute $x_0$ with this formula.
 
- $$ \mu =\frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t + \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0 $$
 
-$$ \mu =\frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t + \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t} \times \frac{x_t - \sqrt{1-\bar{a}_t}ϵ}{\sqrt{\bar{a}_t}}  $$
-
-
-$$ \mu =\frac{\sqrt{a_t}(1-\bar{a}_{t-1})x_t }{1-\bar{a}_t}
-+
-\frac{ \frac{\sqrt{\bar{a}_{t-1}}}{\sqrt{\bar{a}_t}}  (1-a_t) (x_t - \sqrt{1-\bar{a}_t}ϵ)}{1-\bar{a}_t}  $$
-
-$$ \mu =\frac{ 
-  \frac{a_t(1-\bar{a}_{t-1})x_t}{\sqrt{a_t}}    }{1-\bar{a}_t}
-+
-\frac{ \frac{1}{\sqrt{{a}_t}}  (x_t - \sqrt{1-\bar{a}_t}ϵ-a_{t}x_t+a_t\sqrt{1-\bar{a}_t}ϵ) }{1-\bar{a}_t}  $$
-
-
-$$ \mu =\frac{  \frac{1}{\sqrt{{a}_t}}  (  a_tx_t-a_t\bar{a}_{t-1}x_t + x_t - \sqrt{1-\bar{a}_t}ϵ-a_{t}x_t+a_t\sqrt{1-\bar{a}_t}ϵ) }{1-\bar{a}_t}  $$
-
-$$ \mu =\frac{  \frac{1}{\sqrt{{a}_t}}  (  -\bar{a}_{t}x_t + x_t - \sqrt{1-\bar{a}_t}ϵ+a_t\sqrt{1-\bar{a}_t}ϵ) }{1-\bar{a}_t}  $$
-
-$$ \mu =\frac{  \frac{1}{\sqrt{{a}_t}}  (  (1-\bar{a}_{t})x_t - (1-a_t)\sqrt{1-\bar{a}_t}ϵ) }{1-\bar{a}_t}  $$
-
-$$ \mu = \frac{1}{\sqrt{{a}_t}}  (  x_t - \frac{ (1-a_t)\sqrt{1-\bar{a}_t}ϵ } {1-\bar{a}_t} )   $$
-
-$$ \mu = \frac{1}{\sqrt{{a}_t}}  \left(  x_t - \frac{ 1-a_t } {\sqrt{1-\bar{a}_t}}ϵ \right)   $$
- 
-$$ \Downarrow  $$
- 
 $$ p(x_{t-1}|x_{t}) \sim N\left( 
-      \frac{1}{\sqrt{{a}_t}}  \left(  x_t - \frac{ 1-a_t } {\sqrt{1-\bar{a}_t}}ϵ \right) ,
+      \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
+      +
+      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}\times \frac{x_t - \sqrt{1-\bar{a}_t}ϵ}{\sqrt{\bar{a}_t}} ,
       \left( \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}} \right)^2
  \right) $$
 
