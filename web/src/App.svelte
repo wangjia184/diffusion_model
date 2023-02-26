@@ -87,25 +87,40 @@
     }
   };
 
+  const scale = 2;
   const updateCanvas = (img) => {
     const height = img[0].length;
     const width = img[0][0].length;
 
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width * scale;
+    canvas.height = height * scale;
     const ctx = canvas.getContext("2d");
-    const id = ctx.createImageData(width, height, { colorSpace : 'srgb'});
+    const id = ctx.createImageData(width * scale, height * scale, { colorSpace : 'srgb'});
     const pixels = id.data;
 
     for( let y = 0; y < height; y ++){
         for( let x = 0; x < width; x++) {
-            const offset = (y * width + x) * 4;
-            const channels = img[0][y][x];
 
-            pixels[offset] = Math.max( 0, Math.min( 255, channels[0] * 127.5 + 127.5));
-            pixels[offset + 1] = Math.max( 0, Math.min( 255, channels[1] * 127.5 + 127.5));
-            pixels[offset + 2] = Math.max( 0, Math.min( 255, channels[2] * 127.5 + 127.5));
-            pixels[offset + 3] = 255;
+          const channels = img[0][y][x];
+
+          const r = Math.max( 0, Math.min( 255, channels[0] * 127.5 + 127.5));
+          const g = Math.max( 0, Math.min( 255, channels[1] * 127.5 + 127.5));
+          const b = Math.max( 0, Math.min( 255, channels[2] * 127.5 + 127.5));
+
+          for( let offsetX = 0; offsetX < scale; offsetX++){
+            for( let offsetY = 0; offsetY < scale; offsetY++){
+
+              const offset = ( (y*scale+offsetY) * width * scale + x*scale + offsetX ) * 4;
+           
+
+            
+              pixels[offset] = r;
+              pixels[offset + 1] = g;
+              pixels[offset + 2] = b;
+              pixels[offset + 3] = 255;
+            }
+            
+          }
         }
     }                  
 
@@ -119,6 +134,8 @@
     container.appendChild(image);
     */
   }
+
+
 </script>
 
 <svelte:head>
@@ -152,8 +169,7 @@
   }
 
   :global(canvas) {
-    width : 64px;
-    height: 64px;
+
     background-color: #999;
   }
 </style>
