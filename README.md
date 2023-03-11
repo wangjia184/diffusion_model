@@ -53,7 +53,12 @@ $$ \Downarrow  $$
 
 $$ x_t = \sqrt{a_{t}a_{t-1}}x_{t-2} +  \sqrt{a_{t}(1-a_{t-1})} ϵ_{t-1} +  \sqrt{1-a_t} \times ϵ_t $$
 
-$$ \Downarrow  $$
+<details><summary>Because $N(\mu,\sigma_{1}^{2}) + N(\mu,\sigma_{2}^{2}) = N(\mu,(\sigma_{1}^{2} + \sigma_{2}^{2}))$</summary>
+<p>
+<a href="https://en.wikipedia.org/wiki/Sum_of_normally_distributed_random_variables" target="_blank">Proof</a>
+</p>
+</details>
+
 
 $$ x_t = \sqrt{a_{t}a_{t-1}}x_{t-2} +  \sqrt{a_{t}(1-a_{t-1}) + 1-a_t} \times ϵ $$
 
