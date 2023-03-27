@@ -109,7 +109,7 @@ $$ q(x_{t}|x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-\bar{a}_{t}}} e^{\left (  -\fr
 
 # 3.Reverse Process $p$
 
-$$ P(A|B) = \frac{ P(B|A)\times P(A) }{P(B)} $$
+![](denoise.jpg)
 
 $$ p(x_{t-1}|x_{t}) = \frac{ q(x_{t}|x_{t-1})\times q(x_{t-1}|x_0)}{q(x_{t}|x_0)} $$
 
