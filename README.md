@@ -94,14 +94,15 @@ $$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}} \time
 
 ### 2.3 Relationship between $x_t$ and $x_0$
 
-* $x_t = \sqrt{a_{t}a_{t-1}}x_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ$
-* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}}\times ϵ$
-* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{t-(k-2)}a_{t-(k-1)}}x_{t-k} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{t-(k-2)}a_{t-(k-1)}}\times ϵ$
-* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}}x_{0} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}}\times ϵ$
+* $x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ$
+* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}}\times ϵ$
+* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{t-(k-2)}a_{t-(k-1)}}\times x_{t-k} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{t-(k-2)}a_{t-(k-1)}}\times ϵ$
+* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}}\times x_{0} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}}\times ϵ$
 
-$$\bar{a}_t=\prod_{s=1}^{t}a_{s}$$
 
-$$x_{t} = \sqrt{\bar{a}_t}x_0+ \sqrt{1-\bar{a}_t}\times ϵ , ϵ \sim N(0,I) $$
+$$\bar{a}_{t} := a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}$$
+
+$$x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times ϵ , ϵ \sim N(0,I) $$
 
 $$ \Downarrow  $$
 
