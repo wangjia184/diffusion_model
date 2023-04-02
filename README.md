@@ -101,7 +101,7 @@ $$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}} \time
 
 $$\bar{a}_t=\prod_{s=1}^{t}a_{s}$$
 
-$$x_{t} = \sqrt{\bar{a}_t}x_0+ \sqrt{1-\bar{a}_t}\times ϵ , ϵ \in N(0,I) $$
+$$x_{t} = \sqrt{\bar{a}_t}x_0+ \sqrt{1-\bar{a}_t}\times ϵ , ϵ \sim N(0,I) $$
 
 $$ \Downarrow  $$
 
@@ -111,7 +111,7 @@ $$ q(x_{t}|x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-\bar{a}_{t}}} e^{\left (  -\fr
 
 ![](denoise.jpg)
 
-$$ p(x_{t-1}|x_{t}) = \frac{ q(x_{t}|x_{t-1})\times q(x_{t-1}|x_0)}{q(x_{t}|x_0)} $$
+$$ p(x_{t-1}|x_{t},x_{0}) = \frac{ q(x_{t}|x_{t-1},x_{0})\times q(x_{t-1}|x_0)}{q(x_{t}|x_0)} $$
 
 <table>
   <tbody>
@@ -153,7 +153,7 @@ $$ p(x_{t-1}|x_{t}) = \frac{ q(x_{t}|x_{t-1})\times q(x_{t-1}|x_0)}{q(x_{t}|x_0)
 </table>
 
 
-$$ q(x_{t}|x_{t-1}) = \frac{1}{\sqrt{2\pi } \sqrt{1-a_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_{t}}   \right ) } $$
+$$ q(x_{t}|x_{t-1},x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-a_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_{t}}   \right ) } $$
 
 $$ q(x_{t-1}|x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-\bar{a}_{t-1}}} e^{\left (  -\frac{1}{2}\frac{(x_{t-1}-\sqrt{\bar{a}_{t-1}}x_0)^2}{1-\bar{a}_{t-1}}   \right ) } $$
 
@@ -163,7 +163,7 @@ $$ q(x_{t}|x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-\bar{a}_{t}}} e^{\left (  -\fr
 
 
 
-$$ \frac{ q(x_{t}|x_{t-1})\times q(x_{t-1}|x_0)}{q(x_{t}|x_0)} = \left [
+$$ \frac{ q(x_{t}|x_{t-1},x_{0})\times q(x_{t-1}|x_0)}{q(x_{t}|x_0)} = \left [
   \frac{1}{\sqrt{2\pi} \sqrt{1-a_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_{t}}   \right ) } 
 \right ] * 
 \left [ 
