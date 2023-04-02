@@ -25,7 +25,7 @@ $$ x_0 \overset{q(x_1 | x_0)}{\rightarrow} x_1 \overset{q(x_2 | x_1)}{\rightarro
 
 This process is a markov chain, $x_t$ only depends on $x_{t-1}$. $q(x_{t} | x_{t-1})$ adds Gaussian noise at each time step $t$, according to a known variance schedule $β_{t}$ 
 
-$$ x_t = \sqrt{1-β_t}x_{t-1} + \sqrt{β_t}\times ϵ_{t} $$
+$$ x_t = \sqrt{1-β_t}\times x_{t-1} + \sqrt{β_t}\times ϵ_{t} $$
 
 * $β_t$ is not constant at each time step $t$. In fact one defines a so-called "variance schedule", which can be linear, quadratic, cosine, etc. 
 
@@ -37,23 +37,23 @@ $$ 0 < β_1 < β_2 < β_3 < \dots < β_T < 1 $$
 
 
 
-$$ x_t = \sqrt{1-β_t}x_{t-1} + \sqrt{β_t} \times ϵ_{t} $$
+$$ x_t = \sqrt{1-β_t}\times x_{t-1} + \sqrt{β_t} \times ϵ_{t} $$
 
 Define $a_t = 1 - β_t$
 
-$$ x_t = \sqrt{a_{t}}x_{t-1} +  \sqrt{1-a_t} \times ϵ_{t} $$
+$$ x_t = \sqrt{a_{t}}\times x_{t-1} +  \sqrt{1-a_t} \times ϵ_{t} $$
 
 ### 2.1 Relationship between $x_t$ and $x_{t-2}$
 
-$$ x_{t-1} = \sqrt{a_{t-1}}x_{t-2} +  \sqrt{1-a_{t-1}} \times ϵ_{t-1}$$ 
+$$ x_{t-1} = \sqrt{a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t-1}} \times ϵ_{t-1}$$ 
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}} (\sqrt{a_{t-1}}x_{t-2} +  \sqrt{1-a_{t-1}} ϵ_{t-1}) +  \sqrt{1-a_t} \times ϵ_t $$
+$$ x_t = \sqrt{a_{t}} (\sqrt{a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t-1}} ϵ_{t-1}) +  \sqrt{1-a_t} \times ϵ_t $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}}x_{t-2} +  \sqrt{a_{t}(1-a_{t-1})} ϵ_{t-1} +  \sqrt{1-a_t} \times ϵ_t $$
+$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{a_{t}(1-a_{t-1})} ϵ_{t-1} +  \sqrt{1-a_t} \times ϵ_t $$
 
 <details><summary>Because $N(\mu_{1},\sigma_{1}^{2}) + N(\mu_{2},\sigma_{2}^{2}) = N(\mu_{1}+\mu_{2},\sigma_{1}^{2} + \sigma_{2}^{2})$</summary>
 <p>
@@ -62,35 +62,35 @@ $$ x_t = \sqrt{a_{t}a_{t-1}}x_{t-2} +  \sqrt{a_{t}(1-a_{t-1})} ϵ_{t-1} +  \sqrt
 </details>
 
 
-$$ x_t = \sqrt{a_{t}a_{t-1}}x_{t-2} +  \sqrt{a_{t}(1-a_{t-1}) + 1-a_t} \times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{a_{t}(1-a_{t-1}) + 1-a_t} \times ϵ $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}}x_{t-2} +  \sqrt{1-a_{t}a_{t-1}} \times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t}a_{t-1}} \times ϵ $$
 
 ### 2.2 Relationship between $x_t$ and $x_{t-3}$
 
-$$ x_{t-2} = \sqrt{a_{t-2}}x_{t-3} +  \sqrt{1-a_{t-2}} \times ϵ_{t-2} $$
+$$ x_{t-2} = \sqrt{a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t-2}} \times ϵ_{t-2} $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}}(\sqrt{a_{t-2}}x_{t-3} +  \sqrt{1-a_{t-2}} ϵ_{t-2}) +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}}(\sqrt{a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t-2}} ϵ_{t-2}) +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}x_{t-3}  +  \sqrt{a_{t}a_{t-1}(1-a_{t-2})} ϵ_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{a_{t}a_{t-1}(1-a_{t-2})} ϵ_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}x_{t-3}  +  \sqrt{a_{t}a_{t-1}-a_{t}a_{t-1}a_{t-2}} ϵ_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{a_{t}a_{t-1}-a_{t}a_{t-1}a_{t-2}} ϵ_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}x_{t-3}  +  \sqrt{(a_{t}a_{t-1}-a_{t}a_{t-1}a_{t-2}) + 1-a_{t}a_{t-1}} \times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{(a_{t}a_{t-1}-a_{t}a_{t-1}a_{t-2}) + 1-a_{t}a_{t-1}} \times ϵ $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}} \times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}} \times ϵ $$
 
 ### 2.3 Relationship between $x_t$ and $x_0$
 
