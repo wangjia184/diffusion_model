@@ -250,10 +250,10 @@ Because $x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times ϵ$, $x_0 
 
 
 $$ p(x_{t-1}|x_{t}) \sim N\left( 
-      \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
+      {\color{Purple} \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
       +
-      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}\times \frac{x_t - \sqrt{1-\bar{a}_t}ϵ}{\sqrt{\bar{a}_t}} ,
-      \left( \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}} \right)^2
+      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}\times \frac{x_t - \sqrt{1-\bar{a}_t}ϵ}{\sqrt{\bar{a}_t}} } ,
+       {\color{Red} \frac{ \beta_{t} (1-\bar{a}_{t-1}) } { 1-\bar{a}_{t}}} 
  \right) $$
 
 
