@@ -220,33 +220,33 @@ exp \left[  -\frac{1}{2}
 
 $$ \Downarrow  $$
 
-$$ \frac{1}{\sqrt{2\pi} \left ( \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}} \right ) }  
+$$ \frac{1}{\sqrt{2\pi} \left ( {\color{Red} \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}}}  \right ) }  
 exp \left[
 -\frac{1}{2}
 \frac{
   \left(
     x_{t-1} - \left(
-      \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
+      {\color{Purple} \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
       +
-      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0
+      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0} 
       \right)
   \right) ^2
-} {   \left( \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}} \right)^2 }
+} {   \left( {\color{Red} \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}}}  \right)^2 }
 \right] $$
 
 
 $$ \Downarrow  $$
 
 $$ p(x_{t-1}|x_{t}) \sim N\left( 
-      \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
+      {\color{Purple} \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
       +
-      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0 ,
-      \left( \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}} \right)^2
+      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0}  ,
+      \left( {\color{Red} \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}}}  \right)^2
  \right) $$
 
 
 
-Because $x_{t} = \sqrt{\bar{a}_t}x_0+ \sqrt{1-\bar{a}_t}ϵ$, $x_0 = \frac{x_t - \sqrt{1-\bar{a}_t}ϵ}{\sqrt{\bar{a}_t}}$. Substitute $x_0$ with this formula.
+Because $x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times ϵ$, $x_0 = \frac{x_t - \sqrt{1-\bar{a}_t}\times ϵ}{\sqrt{\bar{a}_t}}$. Substitute $x_0$ with this formula.
 
 
 $$ p(x_{t-1}|x_{t}) \sim N\left( 
