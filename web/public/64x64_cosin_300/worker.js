@@ -159,7 +159,46 @@ async function main() {
 
         collection.forEach((t) => t.dispose());
         return xt_minus_one;
-    };
+    };// ddpm_p_sample()
+
+    const scale = 2;
+    const offscreen = new OffscreenCanvas(image_size * scale, image_size * scale);
+    const get_image = (img) => {
+        const height = img[0].length;
+        const width = img[0][0].length;
+
+        const ctx = offscreen.getContext("2d");
+        const id = ctx.createImageData(width * scale, height * scale, {
+            colorSpace: "srgb",
+        });
+        const pixels = id.data;
+
+        for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+                const channels = img[0][y][x];
+
+                const r = Math.max(0, Math.min(255, channels[0] * 127.5 + 127.5));
+                const g = Math.max(0, Math.min(255, channels[1] * 127.5 + 127.5));
+                const b = Math.max(0, Math.min(255, channels[2] * 127.5 + 127.5));
+
+                for (let offsetX = 0; offsetX < scale; offsetX++) {
+                    for (let offsetY = 0; offsetY < scale; offsetY++) {
+                        const offset =
+                            ((y * scale + offsetY) * width * scale + x * scale + offsetX) * 4;
+
+                        pixels[offset] = r;
+                        pixels[offset + 1] = g;
+                        pixels[offset + 2] = b;
+                        pixels[offset + 3] = 255;
+                    }
+                }
+            }
+        }
+
+        ctx.putImageData(id, 0, 0);
+
+        return offscreen.transferToImageBitmap();
+    };// produce_image()
 
     for (; ;) {
         let timestep = timesteps - 1;
@@ -173,13 +212,15 @@ async function main() {
             self.postMessage({
                 type: 'image',
                 timestep: timestep,
-                image: xt_minus_one.arraySync(),
+                image: get_image(xt_minus_one.arraySync()),
                 percent: (timesteps - timestep) / (1.0 * timesteps)
             });
             timestep--;
         }
         xt.dispose();
     }
+
+
 
 
 
