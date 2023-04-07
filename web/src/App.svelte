@@ -2,6 +2,7 @@
   import { Progress, Button } from "sveltestrap";
   import { onMount } from "svelte";
   import VariableDlg from "./Variables.svelte";
+  import SingleStep from "./SingleStep.svelte";
 
   let loadingPercentage = 0;
   let canvas;
@@ -75,7 +76,7 @@
       <div class="col">
         <div class="d-flex justify-content-center">
           <div>
-            <canvas class="d-flex" bind:this={canvas} />
+            <canvas class="d-flex avatar" bind:this={canvas} />
             <div
               class="d-flex progress_bar"
               style="width:{percentage * 100}%"
@@ -93,6 +94,9 @@
       </div>
     </div>
   </div>
+  <br />
+  <hr />
+  <SingleStep />
 {/if}
 
 <VariableDlg bind:open={isVariableModelOpen} variables={parameters} />
@@ -109,7 +113,7 @@
     border: solid 1px #666;
   }
 
-  :global(canvas) {
+  .avatar {
     width: 128px;
     height: 128px;
     border: solid 1px #666;

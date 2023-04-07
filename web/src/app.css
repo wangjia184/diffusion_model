@@ -26,7 +26,6 @@ a:hover {
 
 html {
   width: 100%;
-  overflow: hidden;
 }
 
 body {
@@ -48,10 +47,9 @@ h1 {
 }
 
 #app {
-  max-width: 1280px;
   width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 5rem;
   text-align: center;
 }
 
