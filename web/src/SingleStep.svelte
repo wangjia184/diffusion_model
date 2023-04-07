@@ -1,4 +1,5 @@
 <script>
+    import { Icon } from "sveltestrap";
     import { onMount } from "svelte";
     import singlestep_jpg from "./assets/singlestep.jpg";
     import monnalisa_jpg from "./assets/monnalisa.jpg";
@@ -21,9 +22,12 @@
                 y: 0,
             });
             worker.onmessage = (evt) => {
-                canvas.width = evt.data.width;
-                canvas.height = evt.data.height;
-                canvas.getContext("2d").putImageData(evt.data.image_data, 0, 0);
+                const image_data = evt.data.image_data;
+                if (image_data && canvas) {
+                    canvas.width = image_data.width;
+                    canvas.height = image_data.height;
+                    canvas.getContext("2d").putImageData(image_data, 0, 0);
+                }
             };
         };
     });
@@ -40,6 +44,10 @@
 <h1><img src={singlestep_jpg} alt="x=" /></h1>
 
 <canvas bind:this={canvas} class="canvas" on:mousemove={handleMousemove} />
+<br />
+<a href="singlestep.js" target="_blank" class="link-info"
+    ><Icon name="filetype-js" /> Check Source Code</a
+>
 
 <style>
     .canvas {

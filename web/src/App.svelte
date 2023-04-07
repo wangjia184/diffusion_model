@@ -1,121 +1,54 @@
 <script>
-  import { Progress, Button } from "sveltestrap";
+  import {
+    Progress,
+    Button,
+    TabContent,
+    TabPane,
+    Icon,
+    Table,
+  } from "sveltestrap";
   import { onMount } from "svelte";
-  import VariableDlg from "./Variables.svelte";
+  import ReverseProcess from "./ReverseProcess.svelte";
   import SingleStep from "./SingleStep.svelte";
+  import MultiStep from "./MultiStep.svelte";
+
+  import t_jpg from "./assets/t.jpg";
+  import beta_t_jpg from "./assets/beta_t.jpg";
+  import alpha_t_jpg from "./assets/alpha_t.jpg";
+  import alphas_cumprod_jpg from "./assets/alphas_cumprod.jpg";
+  import alphas_cumprod_prev_jpg from "./assets/alphas_cumprod_prev.jpg";
+  import sigma_jpg from "./assets/sigma.jpg";
 
   let loadingPercentage = 0;
   let canvas;
   let percentage = 0;
   let images = [];
-  let parameters = null;
-  let isVariableModelOpen = false;
-  const worker = new Worker("./64x64_cosin_300/worker.js?3");
-
-  onMount(() => {
-    worker.onmessage = async (evt) => {
-      const data = evt.data;
-      switch (data.type) {
-        case "image": {
-          updateCanvas(data.image);
-
-          percentage = data.percent;
-          if (data.timestep == 0) {
-            images.push(canvas.toDataURL());
-            images = images;
-          }
-          break;
-        }
-        case "ready": {
-          loadingPercentage = 100;
-          parameters = data.parameters;
-          break;
-        }
-        case "progress": {
-          loadingPercentage = Math.floor(data.progress * 100);
-          break;
-        }
-        case "error": {
-          alert(data.message);
-          self.location = self.location;
-          break;
-        }
-        default: {
-          console.log(data);
-          break;
-        }
-      }
-    };
-  });
-
-  const updateCanvas = (img) => {
-    const ctx = canvas.getContext("bitmaprenderer");
-    ctx.transferFromImageBitmap(img);
-  };
+  let variables = null;
 </script>
 
 <svelte:head>
   <link rel="stylesheet" href="./bootstrap/dist/css/bootstrap.min.css" />
 </svelte:head>
 
-{#if loadingPercentage < 100}
-  <div>
-    <div class="text-center">Loading ...</div>
-    <Progress animated color="success" value={loadingPercentage}
-      >{loadingPercentage}%</Progress
-    >
-  </div>
-{:else}
-  <div class="container">
-    <div class="row">
-      {#each images as img}
-        <div class="col">
-          <img src={img} class="generated mb-2" alt="" />
-        </div>
-      {/each}
-      <div class="col">
-        <div class="d-flex justify-content-center">
-          <div>
-            <canvas class="d-flex avatar" bind:this={canvas} />
-            <div
-              class="d-flex progress_bar"
-              style="width:{percentage * 100}%"
-            />
-            {#if parameters}
-              <Button
-                size="sm"
-                color="secondary"
-                on:click={() => (isVariableModelOpen = true)}
-                >Show Variables</Button
-              >
-            {/if}
-          </div>
-        </div>
-      </div>
+<TabContent class="w-100 mt-3 ">
+  <TabPane tabId="singlestep">
+    <span slot="tab">
+      <Icon name="arrow-right-square-fill" /> Single Step Forward
+    </span>
+    <div class="border border-top-0 p-5"><SingleStep /></div></TabPane
+  >
+  <TabPane tabId="multistep">
+    <span slot="tab">
+      <Icon name="fast-forward-fill" /> Multiple Steps Forward
+    </span>
+    <div class="border border-top-0 p-5">
+      <MultiStep />
     </div>
-  </div>
-  <br />
-  <hr />
-  <SingleStep />
-{/if}
-
-<VariableDlg bind:open={isVariableModelOpen} variables={parameters} />
-
-<style>
-  .progress_bar {
-    height: 3px;
-    background-color: darkorange;
-  }
-
-  .generated {
-    width: 128px;
-    height: 128px;
-    border: solid 1px #666;
-  }
-
-  .avatar {
-    width: 128px;
-    height: 128px;
-    border: solid 1px #666;
-  }
-</style>
+  </TabPane>
+  <TabPane tabId="backward" active>
+    <span slot="tab">
+      <Icon name="arrow-left-square-fill" /> Reverse Process
+    </span>
+    <ReverseProcess />
+  </TabPane>
+</TabContent>

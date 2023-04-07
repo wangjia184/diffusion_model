@@ -31,10 +31,10 @@ html {
 body {
   width: 100%;
   margin: 0;
-  display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: white;
 }
 
 h1 {

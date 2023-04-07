@@ -91,13 +91,6 @@ async function main() {
         stddevs[index] = stable_sqrt(beta * (1.0 - alphas_cumprod_prev[index]) / (1.0 - alphas_cumprod[index]))
     });
 
-    if (typeof (console.log) === 'function') {
-        console.log("betas=", betas);
-        console.log("alphas=", alphas);
-        console.log("alphas_cumprod=", alphas_cumprod);
-        console.log("alphas_cumprod_prev=", alphas_cumprod_prev);
-        console.log("stddevs=", stddevs);
-    }
 
     self.postMessage({
         type: 'ready',
