@@ -3,7 +3,7 @@
 
 [Demo Site](https://wangjia184.github.io/diffusion_model/)
 
-[Video Explaination](Chinese)(https://www.youtube.com/watch?v=zEZOYZeIPUs&ab_channel=%E5%A4%A7%E7%99%BD%E8%AF%9DAI)
+[Video Explaination](https://www.youtube.com/watch?v=zEZOYZeIPUs&ab_channel=%E5%A4%A7%E7%99%BD%E8%AF%9DAI)(Chinese)
 
 
 ## 1. DDPM Introduction
