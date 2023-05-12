@@ -2,6 +2,8 @@
 
 
 [Demo Site](https://wangjia184.github.io/diffusion_model/)
+[Video Explaination](https://www.bilibili.com/video/BV1tz4y1h7q1/)(Chinese)
+
 
 [Video Explaination](https://www.youtube.com/watch?v=zEZOYZeIPUs&ab_channel=%E5%A4%A7%E7%99%BD%E8%AF%9DAI)(Chinese)
 
