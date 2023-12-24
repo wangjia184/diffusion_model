@@ -106,12 +106,15 @@ $$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}
 
 $$\bar{a}_{t} := a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}$$
 
-
+<p>
 $$x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times \epsilon , \epsilon \sim N(0,I) $$
+</p>
 
 $$ \Downarrow  $$
 
+<p>
 $$ q(x_{t}|x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-\bar{a}_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}   \right ) } $$
+</p>
 
 
 # 3.Reverse Process $p$
@@ -316,3 +319,5 @@ Because $x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times \epsilon$,
   \right) $$
   </span>
 </p>
+
+**Note:** This `README.md` is intended solely for previewing on the Github page. If you wish to view the rendered page locally, please consult `README.raw.md`.
