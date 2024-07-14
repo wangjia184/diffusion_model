@@ -29,35 +29,35 @@ $$ x_0 \overset{q(x_1 | x_0)}{\rightarrow} x_1 \overset{q(x_2 | x_1)}{\rightarro
 
 This process is a markov chain, $x_t$ only depends on $x_{t-1}$. $q(x_{t} | x_{t-1})$ adds Gaussian noise at each time step $t$, according to a known variance schedule $β_{t}$ 
 
-$$ x_t = \sqrt{1-β_t}\times x_{t-1} + \sqrt{β_t}\times ϵ_{t} $$
+$$ x_t = \sqrt{1-β_t}\times x_{t-1} + \sqrt{β_t}\times \epsilon_{t} $$
 
 * $β_t$ is not constant at each time step $t$. In fact one defines a so-called "variance schedule", which can be linear, quadratic, cosine, etc. 
 
 $$ 0 < β_1 < β_2 < β_3 < \dots < β_T < 1 $$
 
-* $ϵ_{t}$ Gaussian noise, sampled from standard normal distribution.
+* $\epsilon_{t}$ Gaussian noise, sampled from standard normal distribution.
 
 
 
 
 
-$$ x_t = \sqrt{1-β_t}\times x_{t-1} + \sqrt{β_t} \times ϵ_{t} $$
+$$ x_t = \sqrt{1-β_t}\times x_{t-1} + \sqrt{β_t} \times \epsilon_{t} $$
 
 Define $a_t = 1 - β_t$
 
-$$ x_t = \sqrt{a_{t}}\times x_{t-1} +  \sqrt{1-a_t} \times ϵ_{t} $$
+$$ x_t = \sqrt{a_{t}}\times x_{t-1} +  \sqrt{1-a_t} \times \epsilon_{t} $$
 
 ### 2.1 Relationship between $x_t$ and $x_{t-2}$
 
-$$ x_{t-1} = \sqrt{a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t-1}} \times ϵ_{t-1}$$ 
+$$ x_{t-1} = \sqrt{a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t-1}} \times \epsilon_{t-1}$$ 
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}} (\sqrt{a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t-1}} ϵ_{t-1}) +  \sqrt{1-a_t} \times ϵ_t $$
+$$ x_t = \sqrt{a_{t}} (\sqrt{a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t-1}} \epsilon_{t-1}) +  \sqrt{1-a_t} \times \epsilon_t $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{a_{t}(1-a_{t-1})} ϵ_{t-1} +  \sqrt{1-a_t} \times ϵ_t $$
+$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{a_{t}(1-a_{t-1})} \epsilon_{t-1} +  \sqrt{1-a_t} \times \epsilon_t $$
 
 <details><summary>Because $N(\mu_{1},\sigma_{1}^{2}) + N(\mu_{2},\sigma_{2}^{2}) = N(\mu_{1}+\mu_{2},\sigma_{1}^{2} + \sigma_{2}^{2})$</summary>
 <p>
@@ -66,51 +66,56 @@ $$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{a_{t}(1-a_{t-1})} ϵ_{t-1} +
 </details>
 
 
-$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{a_{t}(1-a_{t-1}) + 1-a_t} \times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{a_{t}(1-a_{t-1}) + 1-a_t} \times \epsilon $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t}a_{t-1}} \times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t}a_{t-1}} \times \epsilon $$
 
 ### 2.2 Relationship between $x_t$ and $x_{t-3}$
 
-$$ x_{t-2} = \sqrt{a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t-2}} \times ϵ_{t-2} $$
+$$ x_{t-2} = \sqrt{a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t-2}} \times \epsilon_{t-2} $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}}(\sqrt{a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t-2}} ϵ_{t-2}) +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}}(\sqrt{a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t-2}} \epsilon_{t-2}) +  \sqrt{1-a_{t}a_{t-1}}\times \epsilon $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{a_{t}a_{t-1}(1-a_{t-2})} ϵ_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{a_{t}a_{t-1}(1-a_{t-2})} \epsilon_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times \epsilon $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{a_{t}a_{t-1}-a_{t}a_{t-1}a_{t-2}} ϵ_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{a_{t}a_{t-1}-a_{t}a_{t-1}a_{t-2}} \epsilon_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times \epsilon $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{(a_{t}a_{t-1}-a_{t}a_{t-1}a_{t-2}) + 1-a_{t}a_{t-1}} \times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3}  +  \sqrt{(a_{t}a_{t-1}-a_{t}a_{t-1}a_{t-2}) + 1-a_{t}a_{t-1}} \times \epsilon $$
 
 $$ \Downarrow  $$
 
-$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}} \times ϵ $$
+$$ x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}} \times \epsilon $$
 
 ### 2.3 Relationship between $x_t$ and $x_0$
 
-* $x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times ϵ$
-* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}}\times ϵ$
-* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{t-(k-2)}a_{t-(k-1)}}\times x_{t-k} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{t-(k-2)}a_{t-(k-1)}}\times ϵ$
-* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}}\times x_{0} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}}\times ϵ$
+* $x_t = \sqrt{a_{t}a_{t-1}}\times x_{t-2} +  \sqrt{1-a_{t}a_{t-1}}\times \epsilon$
+* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}}\times x_{t-3} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}}\times \epsilon$
+* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{t-(k-2)}a_{t-(k-1)}}\times x_{t-k} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{t-(k-2)}a_{t-(k-1)}}\times \epsilon$
+* $x_t = \sqrt{a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}}\times x_{0} +  \sqrt{1-a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}}\times \epsilon$
 
 
 $$\bar{a}_{t} := a_{t}a_{t-1}a_{t-2}a_{t-3}...a_{2}a_{1}$$
 
-$$x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times ϵ , ϵ \sim N(0,I) $$
+<p>
+$$x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times \epsilon , \epsilon \sim N(0,I) $$
+</p>
 
 $$ \Downarrow  $$
 
+<p>
 $$ q(x_{t}|x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-\bar{a}_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}   \right ) } $$
+</p>
+
 
 # 3.Reverse Process $p$
 
@@ -162,14 +167,17 @@ $$ p(x_{t-1}|x_{t},x_{0}) = \frac{ q(x_{t}|x_{t-1},x_{0})\times q(x_{t-1}|x_0)}{
 
 $$ q(x_{t}|x_{t-1},x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-a_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_{t}}   \right ) } $$
 
+<p>
 $$ q(x_{t-1}|x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-\bar{a}_{t-1}}} e^{\left (  -\frac{1}{2}\frac{(x_{t-1}-\sqrt{\bar{a}_{t-1}}x_0)^2}{1-\bar{a}_{t-1}}   \right ) } $$
+</p>
 
+<p>
 $$ q(x_{t}|x_{0}) = \frac{1}{\sqrt{2\pi } \sqrt{1-\bar{a}_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}   \right ) } $$
+</p>
 
 
 
-
-
+<p>
 $$ \frac{ q(x_{t}|x_{t-1},x_{0})\times q(x_{t-1}|x_0)}{q(x_{t}|x_0)} = \left [
   \frac{1}{\sqrt{2\pi} \sqrt{1-a_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_{t}}   \right ) } 
 \right ] * 
@@ -179,89 +187,137 @@ $$ \frac{ q(x_{t}|x_{t-1},x_{0})\times q(x_{t-1}|x_0)}{q(x_{t}|x_0)} = \left [
 \left [ 
   \frac{1}{\sqrt{2\pi} \sqrt{1-\bar{a}_{t}}} e^{\left (  -\frac{1}{2}\frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}   \right ) }
 \right ]  $$
+</p>
 
 $$ \Downarrow  $$
 
-$$ \frac{\sqrt{2\pi} \sqrt{1-\bar{a}_{t}}}{\sqrt{2\pi} \sqrt{1-a_{t}} \sqrt{2\pi} \sqrt{1-\bar{a}_{t-1}} }
-e^{\left [  -\frac{1}{2}
-\left (
- \frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_{t}} +
- \frac{(x_{t-1}-\sqrt{\bar{a}_{t-1}}x_0)^2}{1-\bar{a}_{t-1}} -
- \frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}
- \right )
-    \right ] } $$
 
-$$ \Downarrow  $$
-
-$$ \frac{1}{\sqrt{2\pi} \left ( \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}} \right ) }
-exp{\left [  -\frac{1}{2}
-\left (
- \frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_t} +
- \frac{(x_{t-1}-\sqrt{\bar{a}_{t-1}}x_0)^2}{1-\bar{a}_{t-1}} -
- \frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}
- \right )
-    \right ] } $$
-
-$$ \Downarrow  $$
-
-$$ \frac{1}{\sqrt{2\pi} \left ( \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}} \right ) }
-exp \left[  -\frac{1}{2}
-\left (
- \frac{
-   x_{t}^2-2\sqrt{a_t}x_{t}x_{t-1}+{a_t}x_{t-1}^2
- }{1-a_t} +
- \frac{
-   x_{t-1}^2-2\sqrt{\bar{a}_{t-1}}x_0x_{t-1}+\bar{a}_{t-1}x_0^2
-  }{1-\bar{a}_{t-1}} -
- \frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}
-\right)
-\right] $$
-
-
-
-
+<p>
+  $$
+  \frac{\sqrt{2\pi} \sqrt{1-\bar{a}_{t}}}{\sqrt{2\pi} \sqrt{1-a_{t}} \sqrt{2\pi} \sqrt{1-\bar{a}_{t-1}} }
+  e^{\left [ -\frac{1}{2}
+  \left (
+    \frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_{t}} +
+    \frac{(x_{t-1}-\sqrt{\bar{a}_{t-1}}x_0)^2}{1-\bar{a}_{t-1}} -
+    \frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}
+  \right )
+  \right]}
+  $$
+</p>
 
 
 $$ \Downarrow  $$
 
-$$ \frac{1}{\sqrt{2\pi} \left ( {\color{Red} \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}}}  \right ) }  
-exp \left[
--\frac{1}{2}
-\frac{
+
+<p>
+  $$\frac{1}{\sqrt{2\pi} \left( 
+    \frac{\sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}}}{\sqrt{1-\bar{a}_{t}}}
+  \right)}
+  \exp \left[ -\frac{1}{2}
   \left(
-    x_{t-1} - \left(
-      {\color{Purple} \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
-      +
-      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0} 
-      \right)
-  \right) ^2
-} {   \left( {\color{Red} \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}}}  \right)^2 }
-\right] $$
+    \frac{(x_{t}-\sqrt{a_t}x_{t-1})^2}{1-a_t} +
+    \frac{(x_{t-1}-\sqrt{\bar{a}_{t-1}}x_0)^2}{1-\bar{a}_{t-1}} -
+    \frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}
+  \right)
+  \right] $$
+</p>
 
 
 $$ \Downarrow  $$
 
-$$ p(x_{t-1}|x_{t}) \sim N\left( 
-      {\color{Purple} \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
+
+<p>
+  $$ \frac{1}{\sqrt{2\pi} \left( 
+    \frac{\sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}}}{\sqrt{1-\bar{a}_{t}}}
+  \right)}
+  \exp \left[ -\frac{1}{2}
+  \left (
+    \frac{
+      x_{t}^2-2\sqrt{a_t}x_{t}x_{t-1}+{a_t}x_{t-1}^2
+    }{1-a_t} +
+    \frac{
+      x_{t-1}^2-2\sqrt{\bar{a}_{t-1}}x_0x_{t-1}+\bar{a}_{t-1}x_0^2
+    }{1-\bar{a}_{t-1}} -
+    \frac{(x_{t}-\sqrt{\bar{a}_{t}}x_0)^2}{1-\bar{a}_{t}}
+  \right)
+  \right] $$
+</p>
+
+
+$$ \Downarrow  $$
+
+
+<p>
+  $$\frac{1}{\sqrt{2\pi} \left( 
+      \frac{\sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}}}{\sqrt{1-\bar{a}_{t}}}
+  \right)}
+  \exp \left[ -\frac{1}{2}
+  \frac{
+    \left(
+      x_{t-1} - \left(
+          \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
+          +
+          \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0
+      \right)
+    \right)^2
+  }{ \left( 
+        \frac{\sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}}}{\sqrt{1-\bar{a}_{t}}}
+    \right)^2
+  } \right]$$
+</p>
+
+
+
+$$ \Downarrow  $$
+
+
+<p>
+  <span style="color: Purple;">
+    $$ p(x_{t-1}|x_{t}) \sim N\left( 
+      \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
       +
-      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0}  ,
-      \left( {\color{Red} \frac{ \sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}} } {\sqrt{1-\bar{a}_{t}}}}  \right)^2
- \right) $$
+      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}x_0,
+    </span>
+  </span>
+  <span style="color: Red;">
+    \left( \frac{\sqrt{1-a_t} \sqrt{1-\bar{a}_{t-1}}}{\sqrt{1-\bar{a}_{t}}} \right)^2
+  \right) $$
+  </span>
+</p>
 
 
 
-Because $x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times ϵ$, $x_0 = \frac{x_t - \sqrt{1-\bar{a}_t}\times ϵ}{\sqrt{\bar{a}_t}}$. Substitute $x_0$ with this formula.
+Because $x_{t} = \sqrt{\bar{a}_t}\times x_0+ \sqrt{1-\bar{a}_t}\times \epsilon$, $x_0 = \frac{x_t - \sqrt{1-\bar{a}_t}\times \epsilon}{\sqrt{\bar{a}_t}}$. Substitute $x_0$ with this formula.
 
 
-$$ p(x_{t-1}|x_{t}) \sim N\left( 
-      {\color{Purple} \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
+ <p>
+  <span style="color: Purple;">
+    $$ p(x_{t-1}|x_{t}) \sim N\left( 
+      \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
       +
-      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}\times \frac{x_t - \sqrt{1-\bar{a}_t}\times ϵ}{\sqrt{\bar{a}_t}} } ,
-       {\color{Red} \frac{ \beta_{t} (1-\bar{a}_{t-1}) } { 1-\bar{a}_{t}}} 
- \right) $$
+      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}\times \frac{x_t - \sqrt{1-\bar{a}_t}\times \epsilon}{\sqrt{\bar{a}_t}},
+    </span>
+  </span>
+  <span style="color: Red;">
+    \frac{\beta_{t} (1-\bar{a}_{t-1})}{1-\bar{a}_{t}} 
+  \right) $$
+  </span>
+</p>
 
 
 
+<p>
+  <span style="color: Purple;">
+     $$ p(x_{t-1}|x_{t}) \sim N\left( 
+      \frac{\sqrt{a_t}(1-\bar{a}_{t-1})}{1-\bar{a}_t}x_t
+      +
+      \frac{\sqrt{\bar{a}_{t-1}}(1-a_t)}{1-\bar{a}_t}\times \frac{x_t - \sqrt{1-\bar{a}_t}\times \epsilon}{\sqrt{\bar{a}_t}},
+    </span>
+  </span>
+  <span style="color: Red;">
+    \frac{\beta_{t} (1-\bar{a}_{t-1})}{1-\bar{a}_{t}} 
+  \right) $$
+  </span>
+</p>
 
-
-
+**Note:** This `README.md` is intended solely for previewing on the Github page. If you wish to view the rendered page locally, please consult `README.raw.md`.
