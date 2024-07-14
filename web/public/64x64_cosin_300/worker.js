@@ -4,8 +4,7 @@ const url = self.location.toString();
 let index = url.lastIndexOf('/');
 index = url.lastIndexOf('/', index - 1);
 
-const TF_JS_URL = url.substring(0, index) + "/@tensorflow/tfjs/dist/tf.min.js";
-const TF_JS_CDN_URL = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.2.0/dist/tf.min.js";
+const TF_JS_CDN_URL = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js";
 async function load_model() {
 
     const model = await (async () => {
@@ -33,15 +32,19 @@ async function load_model() {
     return model;
 }
 
+let target_canvas = null;
+
+
 async function main() {
 
     try {
+        await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgpu@4.20.0/dist/tf-backend-webgpu.min.js');
+        await tf.setBackend('webgpu');
+        console.log('Successfully loaded WebGPU backend');
+    } catch {
+        await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.20.0/dist/tf-backend-webgl.min.js');
         await tf.setBackend('webgl');
         console.log('Successfully loaded WebGL backend');
-    } catch {
-        await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@4.2.0/dist/tf-backend-wasm.min.js');
-        await tf.setBackend('wasm');
-        console.log('Successfully loaded WASM backend');
     }
 
 
@@ -156,7 +159,7 @@ async function main() {
 
     const scale = 2;
     const offscreen = new OffscreenCanvas(image_size * scale, image_size * scale);
-    const get_image = (img) => {
+    const render_image = (img) => {
         const height = img[0].length;
         const width = img[0][0].length;
 
@@ -190,7 +193,11 @@ async function main() {
 
         ctx.putImageData(id, 0, 0);
 
-        return offscreen.transferToImageBitmap();
+        const target_context = target_canvas.getContext("bitmaprenderer");
+        const bitmap = offscreen.transferToImageBitmap();
+        target_context.transferFromImageBitmap(bitmap);
+
+        return bitmap;
     };// produce_image()
 
     for (; ;) {
@@ -202,44 +209,47 @@ async function main() {
             xt.dispose();
             xt = xt_minus_one;
 
+            const img = await xt_minus_one.array();
+            render_image(img);
+
+            let image_blob = null;
+            if (timestep == 0) {
+                image_blob = await target_canvas.convertToBlob();
+            }
+
             self.postMessage({
                 type: 'image',
                 timestep: timestep,
-                image: get_image(xt_minus_one.arraySync()),
+                imageBlob: image_blob,
                 percent: (timesteps - timestep) / (1.0 * timesteps)
             });
+
             timestep--;
         }
         xt.dispose();
     }
 
 
-
-
-
-
-
-
 }
 
 
-self.postMessage({ type: 'progress', progress: 0, message: 'Loading ' + TF_JS_URL });
-import(TF_JS_URL)
-    .then(async () => {
+self.onmessage = (event) => {
+    const { offscreen } = event.data;
+    target_canvas = offscreen;
 
-        await main();
+    self.postMessage({ type: 'progress', progress: 0, message: 'Loading ' + TF_JS_CDN_URL });
+    import(TF_JS_CDN_URL)
+        .then(async () => {
 
-    })
-    .catch(async (err) => {
-
-        try {
-            await import(TF_JS_CDN_URL);
             await main();
-        }
-        catch {
-            self.postMessage({ type: 'error', message: 'Unable to load ' + TF_JS_URL });
-            console.log('Unable to load ' + TF_JS_URL, err);
-        }
-    });
+
+        })
+        .catch(async (err) => {
+            console.log('Unable to load ' + TF_JS_CDN_URL, err);
+        });
+
+};
+
+
 
 
