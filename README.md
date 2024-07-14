@@ -1,11 +1,23 @@
 # Diffusion model in web browser
 
 
-[Demo Site](https://wangjia184.github.io/diffusion_model/)
-[哔哩哔哩 | 大白话AI | 扩散模型 ](https://www.bilibili.com/video/BV1tz4y1h7q1/)(Chinese)
+[Online Demo! Run it in your web browser ](https://wangjia184.github.io/diffusion_model/)
+
+* 第一集: https://www.bilibili.com/video/BV1tz4y1h7q1 | 正态分布 | 基本设定 | 公式推导 |
+* 第二集: https://www.bilibili.com/video/BV1xQ4y1w7ex | 神经网络 | 概率空间 | 边缘概率 | 各向同性高斯分布 |
+* 第三集: https://www.bilibili.com/video/BV1hZ421y7id | 三维动画展示全过程
+* 第四集: https://www.bilibili.com/video/BV1gK421b7W9 | 神经网络的学习目标以及训练
+* 第五集: https://www.bilibili.com/video/BV12y421z7Mh/ | 花絮 | 热度图制作细节揭秘
 
 
-[Video Explaination](https://www.youtube.com/watch?v=zEZOYZeIPUs&ab_channel=%E5%A4%A7%E7%99%BD%E8%AF%9DAI)(Chinese)
+[Youtube](https://www.youtube.com/watch?v=zEZOYZeIPUs&ab_channel=%E5%A4%A7%E7%99%BD%E8%AF%9DAI)
+
+
+**UPDATE:**
+
+* 2024-07-14 : Update online sample to use `WebGPU` if possible
+
+-------------------
 
 
 ## 1. DDPM Introduction
