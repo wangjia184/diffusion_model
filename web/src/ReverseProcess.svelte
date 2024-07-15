@@ -8,16 +8,23 @@
     import alphas_cumprod_prev_jpg from "./assets/alphas_cumprod_prev.jpg";
     import sigma_jpg from "./assets/sigma.jpg";
     import reverse_jpg from "./assets/reverse.jpg";
+    import ddim_png from "./assets/ddim.png";
 
     let loadingPercentage = 0;
     let canvas;
     let percentage = 0;
     let images = [];
     let variables = null;
+    let skipSteps = 0;
 
     const worker = new Worker(
         "./64x64_cosin_300/worker.js?_" + new Date().getTime(),
     );
+
+    $: skipSteps,
+        (() => {
+            worker.postMessage({ skipSteps: skipSteps });
+        })();
 
     onMount(() => {
         const offscreen = canvas.transferControlToOffscreen();
@@ -61,8 +68,6 @@
 </script>
 
 <div class="border border-top-0 p-5">
-    <h1><img src={reverse_jpg} alt="" /></h1>
-    <hr />
     {#if loadingPercentage < 100}
         <div>
             <div class="text-center">Loading ...</div>
@@ -70,7 +75,40 @@
                 >{loadingPercentage}%</Progress
             >
         </div>
+    {:else}
+        <div class="mb-3 row">
+            <label for="acc" class="col-sm-2 text-end">Acceleration :</label>
+            <div class="col-sm-8">
+                <input
+                    type="range"
+                    class="form-range"
+                    min="0"
+                    max="20"
+                    step="1"
+                    id="acc"
+                    bind:value={skipSteps}
+                />
+            </div>
+            <div class="col-sm-2 text-start">
+                <small>
+                    <strong
+                        >{skipSteps <= 0
+                            ? "DDPM"
+                            : "DDIM; m=n-" + skipSteps.toString()}</strong
+                    >
+                </small>
+            </div>
+        </div>
     {/if}
+    <h1>
+        <img src={ddim_png} alt="" style="display: {skipSteps ? '' : 'none'}" />
+        <img
+            src={reverse_jpg}
+            alt=""
+            style="display: {skipSteps ? 'none' : ''}"
+        />
+    </h1>
+    <hr />
     <div class="container mt-2">
         <div class="row">
             {#each images as img}

@@ -16,6 +16,7 @@
 **UPDATE:**
 
 * 2024-07-14 : Update online sample to use `WebGPU` if possible
+* 2024-07-15 : Added DDIM sampling method
 
 -------------------
 
