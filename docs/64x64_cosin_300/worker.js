@@ -4,10 +4,12 @@ const url = self.location.toString();
 let index = url.lastIndexOf('/');
 index = url.lastIndexOf('/', index - 1);
 
-const TF_JS_CDN_URL = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js";
+const TF_JS_CDN_URL = "https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js";
 async function load_model() {
 
     const model = await (async () => {
+        await tf.ready();
+        console.log('Loading model ...');
         try {
             self.postMessage({ type: 'progress', progress: 0.1, message: 'Loading model' });
             return await tf.loadGraphModel('./model.json', {
@@ -36,13 +38,12 @@ let target_canvas = null;
 let ddim_skips = 0;
 
 async function main() {
-
     try {
-        await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgpu@4.20.0/dist/tf-backend-webgpu.min.js');
+        await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgpu@4.22.0/dist/tf-backend-webgpu.min.js');
         await tf.setBackend('webgpu');
         console.log('Successfully loaded WebGPU backend');
     } catch {
-        await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.20.0/dist/tf-backend-webgl.min.js');
+        await import('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.22.0/dist/tf-backend-webgl.min.js');
         await tf.setBackend('webgl');
         console.log('Successfully loaded WebGL backend');
     }
